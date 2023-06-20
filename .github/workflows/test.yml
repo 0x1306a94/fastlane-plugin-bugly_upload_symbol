@@ -3,6 +3,9 @@ name: Test
 on:
   push:
 
+env:
+  BUGLY_UPLOAD_SYMBOL_APPID: test
+  BUGLY_UPLOAD_SYMBOL_APP_KEY: test
 jobs:
   test:
     runs-on: macos-latest
