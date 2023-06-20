@@ -1,0 +1,7 @@
+lane :test do
+  # bugly_upload_symbol
+  bugly_upload_symbol(bundleid: "com.test.test",
+                      version: "5.2.6(4964)",
+                      inputSymbolDir: "dSYMs",
+                      verbose: true)
+end
