@@ -28,22 +28,27 @@ module Fastlane
 
         base_command = "java -jar #{jar_path} -appid '#{appid}' -appkey '#{appkey}' -bundleid '#{bundleid}' -version '#{version}' -platform '#{platform}'"
         begin
+          upload_count = 0
           success_pattern = '{"statusCode":0,"msg":"success"'
           unless inputSymbol.nil?
             final_command = base_command + " -inputSymbol #{File.expand_path(inputSymbol)}"
             command_result = do_run(final_command, verbose)
             return false unless command_result.include?(success_pattern)
+            upload_count += 1
           end
 
           unless inputSymbolDir.nil?
             UI.message("inputSymbolDir: #{File.expand_path(inputSymbolDir)}") if verbose
-            Dir.glob("#{File.expand_path(inputSymbolDir)}/*.dSYM").each do |entry|
+            Dir.glob("#{File.expand_path(inputSymbolDir)}/**/*.dSYM").each do |entry|
               UI.message("Find dSYM entry: #{entry}") if verbose
               final_command = base_command + " -inputSymbol #{entry}"
               command_result = do_run(final_command, verbose)
               return false unless command_result.include?(success_pattern)
+              upload_count += 1
             end
           end
+
+          UI.success("upload_count: #{upload_count}")
         rescue => ex
           UI.error("run command error: #{ex}") if verbose
           return false
